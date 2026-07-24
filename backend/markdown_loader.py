@@ -20,6 +20,12 @@ def load_markdown_for_page(page: str) -> str:
     elif page == "project-ciphercare":
         content += load_file("CipherCare/project.md") + "\n\n"
         content += load_file("CipherCare/faq.md") + "\n\n"
+    elif page == "project-pothole":
+        content += load_file("Pothole/project.md") + "\n\n"
+        content += load_file("Pothole/faq.md") + "\n\n"
+    elif page == "project-fare-calculator":
+        content += load_file("FareCalculator/project.md") + "\n\n"
+        content += load_file("FareCalculator/faq.md") + "\n\n"
     elif page == "research-stackelberg":
         content += load_file("Stackelberg/project.md") + "\n\n"
         content += load_file("Stackelberg/faq.md") + "\n\n"

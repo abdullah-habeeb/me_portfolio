@@ -19,6 +19,8 @@ export const CONTEXT_META: Record<ContextKey, { label: string; dot: string; icon
   "projects-index": { label: "Projects", dot: "var(--cyan-accent)", icon: "🗂" },
   "project-renewly": { label: "Renewly", dot: "var(--emerald-accent)", icon: "🔁" },
   "project-ciphercare": { label: "CipherCare", dot: "var(--cyan-accent)", icon: "🛡" },
+  "project-pothole": { label: "Pothole Detection", dot: "var(--amber-accent)", icon: "🕳" },
+  "project-fare-calculator": { label: "Auto Fare Calculator", dot: "var(--violet-accent)", icon: "🧮" },
   "research-index": { label: "Research", dot: "var(--violet-accent)", icon: "🔬" },
   "research-stackelberg": { label: "Adversarial Regularization", dot: "var(--rose-accent)", icon: "🛡" },
   experience: { label: "Experience", dot: "var(--amber-accent)", icon: "🧑‍💻" },

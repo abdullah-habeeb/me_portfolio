@@ -50,6 +50,8 @@ const GROUPS: TreeGroup[] = [
     items: [
       { id: "project-renewly", label: "Renewly", accent: "var(--emerald-accent)" },
       { id: "project-ciphercare", label: "CipherCare", accent: "var(--cyan-accent)" },
+      { id: "project-pothole", label: "Pothole Detection", accent: "var(--amber-accent)" },
+      { id: "project-fare-calculator", label: "Auto Fare Calculator", accent: "var(--violet-accent)" },
     ],
   },
   {

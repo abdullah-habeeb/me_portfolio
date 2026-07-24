@@ -14,6 +14,7 @@ export type ProjectDef = {
   stack: string[];
   accent: string;
   links: { github?: string; docs?: string; demo?: string };
+  featured?: boolean;
 
   image?: string;
   topTags?: string[];
@@ -57,6 +58,7 @@ export const PROJECTS: ProjectDef[] = [
     ],
     accent: "var(--emerald-accent)",
     links: { github: "https://github.com/abdullah-habeeb/renewly-subscription-tracker", demo: "https://subscription-hub-19cf9.web.app" },
+    featured: true,
   },
   {
     id: "project-ciphercare",
@@ -88,10 +90,149 @@ export const PROJECTS: ProjectDef[] = [
     ],
     accent: "var(--cyan-accent)",
     links: { github: "https://github.com/abdullah-habeeb/ciphercare" },
+    featured: true,
+  },
+  {
+    id: "project-pothole",
+    name: "Pothole Detection Platform",
+    summary: "Full-Stack Pothole Detection & Monitoring Platform",
+    topTags: ["Full-Stack", "Computer Vision", "Smart City"],
+    problem:
+      "Identifying and tracking road hazards like potholes is normally manual and reactive, with no unified system to detect, verify, and visualize them at scale.",
+    solution:
+      "Users upload dashcam footage through a React frontend. A dedicated FastAPI ML microservice samples every 5th frame with OpenCV, sends frames to a Roboflow-hosted YOLOv11 model, and returns a severity rating plus up to 5 detections with bounding boxes and preview images. Results surface on an interactive map and admin dashboard behind JWT-authenticated routes.",
+    architecture:
+      "React 18 + TypeScript frontend (upload, map, dashboard) → Node.js + Express + MongoDB backend (JWT auth, orchestration) → FastAPI ml-server (OpenCV frame sampling → Roboflow YOLOv11 via InferenceHTTPClient). Three independent services: frontend (3000), backend (5000), ml-server (8000).",
+    stack: ["React 18", "Node.js", "MongoDB", "FastAPI", "Roboflow YOLOv11"],
+    stackCategorized: [
+      { category: "Frontend", items: ["React 18", "TypeScript", "Vite", "TanStack Query", "React Leaflet", "Recharts"] },
+      { category: "Backend", items: ["Node.js", "Express", "MongoDB (Mongoose)", "JWT auth"] },
+      { category: "ML Service", items: ["FastAPI", "OpenCV", "Roboflow Inference SDK (YOLOv11)"] },
+    ],
+    engineeringDecisions: [
+      { name: "Why a separate FastAPI microservice?", reason: "Keeps the Python ML ecosystem (OpenCV, Roboflow SDK) decoupled from the Node API layer — it can be scaled or redeployed independently." },
+      { name: "Why a Roboflow-hosted model?", reason: "Avoids managing GPU infrastructure at this stage while still getting real YOLOv11 detections." },
+      { name: "Why sample every 5th frame?", reason: "Running inference on every frame is expensive and mostly redundant — pothole framing barely changes between adjacent frames." },
+    ],
+    challenges: [
+      "Keeping the detection response shape consistent across three independently developed services",
+      "Coordinating three separate dev servers during development",
+      "Balancing frame-sampling rate against detection coverage and latency",
+    ],
+    accent: "var(--amber-accent)",
+    links: { github: "https://github.com/abdullah-habeeb/pothole" },
+  },
+  {
+    id: "project-fare-calculator",
+    name: "Bengaluru Auto Fare Calculator",
+    summary: "Official Auto-Rickshaw Fare Calculator for Bengaluru",
+    topTags: ["Web", "Google Maps API", "Vanilla JS"],
+    problem:
+      "Auto-rickshaw fares in Bengaluru are often inconsistent in practice, leading to confusion and overcharging, with no quick official way to check what a trip should cost.",
+    solution:
+      "A focused web app using Google Places Autocomplete and the Distance Matrix API to get real road distance, then applies the official fare structure — ₹35 minimum for the first 2 km, ₹17/km after, with an automatic 1.5x night surcharge between 10 PM and 5 AM. Built as a one-week project to practice API integration and DOM manipulation without framework overhead.",
+    architecture:
+      "Single-page vanilla JS app: Google Places Autocomplete for location input → Distance Matrix API for road distance → client-side fare logic (minimum fare + per-km rate + night surcharge window) rendered directly to the DOM.",
+    stack: ["HTML5", "CSS3", "Vanilla JavaScript", "Google Maps API"],
+    stackCategorized: [
+      { category: "Frontend", items: ["HTML5", "CSS3 (Flexbox)", "Vanilla JavaScript"] },
+      { category: "APIs", items: ["Google Places API", "Google Distance Matrix API"] },
+    ],
+    engineeringDecisions: [
+      { name: "Why vanilla JS instead of a framework?", reason: "Scoped as a one-week project to practice core API integration and DOM manipulation — a framework would have been overhead for a single-page calculator." },
+      { name: "Why Distance Matrix over straight-line distance?", reason: "Fare depends on real road distance, not as-the-crow-flies distance, so the calculated fare stays accurate to what a rider is actually charged." },
+    ],
+    challenges: [
+      "Getting road-accurate distance instead of straight-line distance",
+      "Implementing the night-surcharge window correctly across the 10 PM–5 AM boundary",
+      "Keeping the UI clean and mobile-friendly with plain CSS and no framework",
+    ],
+    accent: "var(--violet-accent)",
+    links: { github: "https://github.com/abdullah-habeeb/bengaluru-auto-fare-calculator" },
   },
 ];
 
+function ProjectCard({
+  p,
+  i,
+  onOpen,
+  featured,
+}: {
+  p: ProjectDef;
+  i: number;
+  onOpen: (t: TabKind) => void;
+  featured?: boolean;
+}) {
+  const tab = TABS[p.id];
+  const Icon = tab.icon;
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.05 * i + 0.05, duration: 0.35 }}
+      whileHover={{ y: -2 }}
+      onClick={() => onOpen(p.id)}
+      className={`group relative text-left rounded-xl border p-5 transition-colors flex flex-col justify-between ${
+        featured
+          ? "border-border bg-card/80 hover:border-[var(--cyan-accent)]/60 shadow-sm"
+          : "border-border/70 bg-card/60 hover:border-border"
+      }`}
+      style={
+        featured
+          ? { boxShadow: `0 0 0 1px color-mix(in oklab, ${p.accent} 25%, transparent)` }
+          : undefined
+      }
+    >
+      {featured && (
+        <span
+          className="absolute -top-2.5 left-4 rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.08em]"
+          style={{
+            background: `color-mix(in oklab, ${p.accent} 18%, var(--card))`,
+            borderColor: `color-mix(in oklab, ${p.accent} 40%, transparent)`,
+            color: p.accent,
+          }}
+        >
+          Featured
+        </span>
+      )}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span
+            className="grid h-8 w-8 place-items-center rounded-md shrink-0"
+            style={{ background: `color-mix(in oklab, ${p.accent} 15%, transparent)` }}
+          >
+            <Icon className="h-4 w-4" style={{ color: p.accent }} />
+          </span>
+          <div>
+            <div className="text-base font-semibold text-foreground">{p.name}</div>
+            <div className="text-xs text-muted-foreground">{p.summary}</div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 flex items-center justify-between w-full">
+        <div className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground">
+          Open Workspace &rarr;
+        </div>
+        <div className="flex flex-wrap justify-end gap-1.5">
+          {p.stack.slice(0, 3).map((s) => (
+            <Chip key={s} accent={p.accent}>
+              {s}
+            </Chip>
+          ))}
+        </div>
+      </div>
+      {p.links.github && (
+        <div className="mt-3 border-t border-border/50 pt-3">
+          <GithubBadge repoUrl={p.links.github} />
+        </div>
+      )}
+    </motion.button>
+  );
+}
+
 export function ProjectsIndex({ onOpen }: { onOpen: (t: TabKind) => void }) {
+  const featured = PROJECTS.filter((p) => p.featured);
+  const rest = PROJECTS.filter((p) => !p.featured);
   return (
     <div className="mx-auto max-w-5xl px-8 py-10">
       <FadeIn>
@@ -101,55 +242,27 @@ export function ProjectsIndex({ onOpen }: { onOpen: (t: TabKind) => void }) {
           subtitle="Full-stack fintech and privacy-preserving ML systems that reflect how I approach end-to-end ownership."
         />
       </FadeIn>
-      <div className="grid gap-4 md:grid-cols-2">
-        {PROJECTS.map((p, i) => {
-          const tab = TABS[p.id];
-          const Icon = tab.icon;
-          return (
-            <motion.button
-              key={p.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * i + 0.05, duration: 0.35 }}
-              whileHover={{ y: -2 }}
-              onClick={() => onOpen(p.id)}
-              className="group text-left rounded-xl border border-border/70 bg-card/60 p-5 transition-colors hover:border-border flex flex-col justify-between"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="grid h-8 w-8 place-items-center rounded-md shrink-0"
-                    style={{ background: `color-mix(in oklab, ${p.accent} 15%, transparent)` }}
-                  >
-                    <Icon className="h-4 w-4" style={{ color: p.accent }} />
-                  </span>
-                  <div>
-                    <div className="text-base font-semibold text-foreground">{p.name}</div>
-                    <div className="text-xs text-muted-foreground">{p.summary}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center justify-between w-full">
-                <div className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground">
-                  Open Workspace &rarr;
-                </div>
-                <div className="flex flex-wrap justify-end gap-1.5">
-                  {p.stack.slice(0, 3).map((s) => (
-                    <Chip key={s} accent={p.accent}>
-                      {s}
-                    </Chip>
-                  ))}
-                </div>
-              </div>
-              {p.links.github && (
-                <div className="mt-3 border-t border-border/50 pt-3">
-                  <GithubBadge repoUrl={p.links.github} />
-                </div>
-              )}
-            </motion.button>
-          );
-        })}
-      </div>
+
+      {featured.length > 0 && (
+        <div className="mb-8 grid gap-4 md:grid-cols-2">
+          {featured.map((p, i) => (
+            <ProjectCard key={p.id} p={p} i={i} onOpen={onOpen} featured />
+          ))}
+        </div>
+      )}
+
+      {rest.length > 0 && (
+        <>
+          <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            More Projects
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {rest.map((p, i) => (
+              <ProjectCard key={p.id} p={p} i={i + featured.length} onOpen={onOpen} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

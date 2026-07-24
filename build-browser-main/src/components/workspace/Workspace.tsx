@@ -23,7 +23,9 @@ function renderTab(id: TabKind, open: (t: TabKind) => void) {
     case "projects-index":
       return <ProjectsIndex onOpen={open} />;
     case "project-renewly":
-    case "project-ciphercare": {
+    case "project-ciphercare":
+    case "project-pothole":
+    case "project-fare-calculator": {
       const project = PROJECTS.find((p) => p.id === id)!;
       return <ProjectPage project={project} />;
     }

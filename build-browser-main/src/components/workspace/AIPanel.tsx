@@ -30,6 +30,8 @@ const SUGGESTIONS_BY_CONTEXT: Partial<Record<ContextKey, string[]>> = {
     "Which project is closest to production?",
     "Compare Renewly and CipherCare.",
     "Which project uses federated learning?",
+    "Tell me about the pothole detection platform.",
+    "Tell me about the fare calculator.",
   ],
   "project-renewly": [
     "Explain the architecture",
@@ -48,6 +50,21 @@ const SUGGESTIONS_BY_CONTEXT: Partial<Record<ContextKey, string[]>> = {
     "What is domain relevance scoring?",
     "How does the blockchain audit trail work?",
     "What challenges did you face?",
+    "Explain this to a recruiter.",
+  ],
+
+  "project-pothole": [
+    "Explain the architecture.",
+    "Why a separate FastAPI microservice?",
+    "Why sample every 5th frame instead of every frame?",
+    "What does the ML pipeline actually do?",
+    "What challenges did you face?",
+    "Explain this to a recruiter.",
+  ],
+  "project-fare-calculator": [
+    "Why vanilla JavaScript instead of a framework?",
+    "How is the fare calculated?",
+    "Why the Distance Matrix API instead of straight-line distance?",
     "Explain this to a recruiter.",
   ],
 

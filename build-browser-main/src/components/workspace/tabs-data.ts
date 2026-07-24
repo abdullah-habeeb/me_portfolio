@@ -2,6 +2,8 @@ import {
   Boxes,
   Braces,
   Briefcase,
+  Calculator,
+  Construction,
   Contact as ContactIcon,
   FileText,
   FlaskConical,
@@ -21,6 +23,8 @@ export type TabKind =
   | "projects-index"
   | "project-renewly"
   | "project-ciphercare"
+  | "project-pothole"
+  | "project-fare-calculator"
   | "research-index"
   | "research-stackelberg"
   | "experience"
@@ -70,6 +74,22 @@ export const TABS: Record<TabKind, TabDef> = {
     icon: ShieldCheck,
     accent: "var(--cyan-accent)",
     breadcrumb: ["Workspace", "Projects", "CipherCare"],
+  },
+  "project-pothole": {
+    id: "project-pothole",
+    label: "Pothole Detection",
+    filename: "pothole.md",
+    icon: Construction,
+    accent: "var(--amber-accent)",
+    breadcrumb: ["Workspace", "Projects", "Pothole Detection"],
+  },
+  "project-fare-calculator": {
+    id: "project-fare-calculator",
+    label: "Auto Fare Calculator",
+    filename: "fare-calculator.md",
+    icon: Calculator,
+    accent: "var(--violet-accent)",
+    breadcrumb: ["Workspace", "Projects", "Auto Fare Calculator"],
   },
   "research-index": {
     id: "research-index",

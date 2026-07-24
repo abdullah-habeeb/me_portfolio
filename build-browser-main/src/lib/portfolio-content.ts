@@ -6,6 +6,8 @@ export type ContextKey =
   | "projects-index"
   | "project-renewly"
   | "project-ciphercare"
+  | "project-pothole"
+  | "project-fare-calculator"
   | "research-index"
   | "research-stackelberg"
   | "experience"
@@ -23,7 +25,8 @@ Based in Bengaluru, India.`,
   },
   "projects-index": {
     title: "Projects overview",
-    body: `Two shipped projects: Renewly (Gmail-based automatic subscription tracker for India) and CipherCare (privacy-preserving federated learning platform for healthcare AI).`,
+    body: `Featured: Renewly (Gmail-based automatic subscription tracker for India) and CipherCare (privacy-preserving federated learning platform for healthcare AI).
+Also: Pothole Detection Platform (full-stack dashcam pothole detection with a Roboflow YOLOv11 ML microservice) and Bengaluru Auto Fare Calculator (Google Maps-based official auto-rickshaw fare calculator).`,
   },
   "project-renewly": {
     title: "Renewly — Every subscription. One quiet place.",
@@ -39,6 +42,21 @@ Live: https://subscription-hub-19cf9.web.app · GitHub: https://github.com/abdul
 What it does: Simulates 5 hospital nodes (ECG, vitals, X-ray, geriatric ECG, multimodal) collaboratively training a shared diagnostic model without sharing raw patient data.
 Architecture: A custom FedProxFairness Strategy on top of Flower combines FedProx (µ=0.01), fairness-weighted aggregation (0.6·AUROC² + 0.3·samples + 0.1·domain_relevance), differential privacy (ε=5.0, δ=1e-5, adaptive per-hospital noise), and domain relevance scoring (0.7·modality_similarity + 0.3·label_overlap). Every round is hash-chained (SHA-256 + Keccak256) into a blockchain-style audit log.
 GitHub: https://github.com/abdullah-habeeb/ciphercare`,
+  },
+  "project-pothole": {
+    title: "Pothole Detection Platform",
+    body: `Stack: React 18/TypeScript/Vite frontend, Node.js/Express/MongoDB backend, FastAPI ML microservice.
+What it does: Full-stack platform for detecting and managing potholes from uploaded dashcam video. Users upload footage; a dedicated FastAPI "ml-server" samples every 5th frame with OpenCV and sends frames to a Roboflow-hosted YOLOv11 model, returning a severity rating (high/medium/none) plus up to 5 detections with confidence, bounding box, and preview image. Results surface on an interactive map (React Leaflet) and an admin dashboard (Recharts), behind JWT-authenticated, role-gated routes.
+Architecture: three independently-run services — frontend (3000), Express backend (5000), FastAPI ml-server (8000) — deliberately decoupled so the Python/ML stack can scale or redeploy independently of the Node API.
+Why every 5th frame: a speed/coverage tradeoff — full-frame inference is expensive and mostly redundant since pothole framing barely changes between adjacent frames.
+GitHub: https://github.com/abdullah-habeeb/pothole`,
+  },
+  "project-fare-calculator": {
+    title: "Bengaluru Auto Fare Calculator",
+    body: `Stack: HTML5, CSS3, vanilla JavaScript, Google Maps JavaScript API (Places API for autocomplete, Distance Matrix API for road distance).
+What it does: Calculates the official Bengaluru auto-rickshaw fare for a trip — ₹35 minimum fare for the first 2 km, then ₹17/km after, with a 1.5x surcharge automatically applied for trips between 10 PM and 5 AM. Uses real road distance via the Distance Matrix API rather than straight-line distance, so the fare matches what a rider would actually be charged.
+Why vanilla JS: scoped as a one-week project specifically to practice direct API integration and DOM manipulation — a framework would have been overhead for a single-page calculator.
+GitHub: https://github.com/abdullah-habeeb/bengaluru-auto-fare-calculator`,
   },
   "research-index": {
     title: "Research overview",

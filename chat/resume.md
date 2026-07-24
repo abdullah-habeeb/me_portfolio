@@ -64,6 +64,34 @@ GitHub: https://github.com/abdullah-habeeb/ciphercare
 
 ---
 
+## Pothole Detection Platform — Full-Stack Pothole Detection & Monitoring
+
+Highlights:
+
+- Built a full-stack platform for detecting and managing potholes from uploaded dashcam video: React dashboard, Node/Express/MongoDB backend, and a dedicated FastAPI ML microservice
+- The ML microservice samples every 5th frame with OpenCV and calls a Roboflow-hosted YOLOv11 model, returning severity (high/medium/none) plus per-detection confidence, bounding box, and preview image
+- Surfaced results on an interactive map (React Leaflet) and an admin dashboard (Recharts), behind JWT-authenticated, role-gated routes
+
+Stack: React 18, TypeScript, Vite, Node.js, Express, MongoDB, FastAPI, Roboflow YOLOv11, OpenCV
+
+GitHub: https://github.com/abdullah-habeeb/pothole
+
+---
+
+## Bengaluru Auto Fare Calculator — Official Auto-Rickshaw Fare Calculator
+
+Highlights:
+
+- Built a web app that calculates the official Bengaluru auto-rickshaw fare using the Google Maps Distance Matrix API for real road distance, not straight-line distance
+- Applied the official fare structure (₹35 minimum for the first 2 km, ₹17/km after, 1.5x night surcharge 10 PM–5 AM)
+- Scoped and shipped as a one-week project in vanilla JavaScript to practice direct API integration and DOM manipulation
+
+Stack: HTML5, CSS3, Vanilla JavaScript, Google Maps API
+
+GitHub: https://github.com/abdullah-habeeb/bengaluru-auto-fare-calculator
+
+---
+
 # Research Publications
 
 ## Adversarial Regularization via Stackelberg Equilibria
