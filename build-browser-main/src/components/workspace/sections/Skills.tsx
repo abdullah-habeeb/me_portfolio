@@ -33,6 +33,12 @@ const CERTIFICATIONS = [
   { name: "SAP Business Data Cloud", issuer: "SAP · 2026" },
 ];
 
+const COURSES = [
+  { name: "Python Essentials 1", issuer: "Cisco Networking Academy · 2024" },
+  { name: "Introduction to Cybersecurity", issuer: "Cisco Networking Academy · 2024" },
+  { name: "Operating System Basics", issuer: "Cisco Networking Academy · 2025" },
+];
+
 export function SkillsSection() {
   return (
     <div className="mx-auto max-w-5xl px-8 py-10">
@@ -73,6 +79,22 @@ export function SkillsSection() {
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {CERTIFICATIONS.map((c) => (
+              <Card key={c.name}>
+                <div className="text-sm font-medium text-foreground">{c.name}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{c.issuer}</div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </FadeIn>
+
+      <FadeIn delay={0.2}>
+        <div className="mt-10">
+          <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Courses
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            {COURSES.map((c) => (
               <Card key={c.name}>
                 <div className="text-sm font-medium text-foreground">{c.name}</div>
                 <div className="mt-1 text-xs text-muted-foreground">{c.issuer}</div>

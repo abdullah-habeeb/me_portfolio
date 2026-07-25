@@ -61,14 +61,18 @@ GitHub: https://github.com/abdullah-habeeb/bengaluru-auto-fare-calculator`,
   "research-index": {
     title: "Research overview",
     body: `RESEARCH OVERVIEW
-Abdullah's research paper "Adversarial Regularization via Stackelberg Equilibria" is under review at Elsevier Future Generation Computer Systems (FGCS), focused on defending deep neural networks against clean-label data poisoning attacks.`,
+Abdullah's research paper "Adversarial Regularization via Stackelberg Equilibria: Securing Deep Neural Networks Against Clean-Label Data Poisoning" is under review at Elsevier Future Generation Computer Systems (FGCS). It defends deep neural networks against clean-label data poisoning using a Stackelberg game-theoretic Min-Max retraining framework, reaching 91.14% accuracy (+4.54% over the clean baseline) while suppressing the Attack Success Rate to 3.53% on CIFAR-10.`,
   },
   "research-stackelberg": {
     title: "Research: Adversarial Regularization via Stackelberg Equilibria",
-    body: `Status: Under Review, Elsevier FGCS
-Problem: Clean-label data poisoning attacks craft correctly-labeled samples that implant hidden backdoors, evading standard anomaly filters.
-Work: Architected a Stackelberg game-theoretic pipeline from scratch in PyTorch to simulate and defend against these attacks, using an iterative Min-Max retraining algorithm with anticipatory warm-starting.
-Key Results: Suppressed backdoor Attack Success Rate to 3.53% while the defended model outperformed a pristine, unpoisoned baseline by +4.54%. Discovered a novel Adversarial Regularization effect.`,
+    body: `Status: Under Review, Elsevier Future Generation Computer Systems (FGCS)
+Problem: Clean-label data poisoning attacks craft correctly-labeled samples that implant hidden backdoors, evading standard anomaly filters like Spectral Signatures and SEVER, which strip legitimate high-entropy samples instead of the semantically indistinguishable poison.
+Setup: CIFAR-10, ResNet-18 backbone, attack targets class 1 ("automobile") -> class 7 ("horse") under a constrained 5% poisoning budget. Attacker selects samples by highest loss margin.
+Work: Modeled the attacker-defender interaction as a two-player zero-sum Stackelberg game and built an iterative alternating Min-Max retraining defense from scratch in PyTorch, where the defender warm-starts each round from the prior round's weights.
+Key Results: Clean baseline 86.60% accuracy. Undefended poisoning collapses accuracy to 78.65% (a "Shattered Model" effect). Spectral Signatures and SEVER only reach ~80%. The Min-Max defense reaches 91.14% accuracy (+4.54% over clean baseline) while suppressing Attack Success Rate to 3.53% -- the only method to beat the clean baseline.
+Ablation: Cold-start (amnesiac) defender reaches 88.36% acc / 4.34% ASR vs. warm-start (adaptive) defender's 91.14% acc / 3.53% ASR, proving the gain comes from anticipatory game-theoretic adaptation, not extra compute.
+Discovery: A novel "Adversarial Regularization" effect -- being forced to repeatedly reconcile the attacker's hardest loss-margin samples acts as an unplanned curriculum that generalizes better than standard training.
+Full paper PDF: /Adversarial_Regularization_Stackelberg.pdf`,
   },
   experience: {
     title: "Experience & Leadership",
@@ -86,7 +90,12 @@ AI/ML: LLMs, RAG, AI Agents, Prompt Engineering, Computer Vision (YOLO, MiDaS), 
 
 Certifications:
 - SAP Backend Developer (CAP) — 2026
-- SAP Business Data Cloud — 2026`,
+- SAP Business Data Cloud — 2026
+
+Courses:
+- Python Essentials 1 — Cisco Networking Academy, 2024
+- Introduction to Cybersecurity — Cisco Networking Academy, 2024
+- Operating System Basics — Cisco Networking Academy, 2025`,
   },
   resume: {
     title: "Resume",

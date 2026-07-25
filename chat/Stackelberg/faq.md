@@ -26,7 +26,15 @@ Part of the iterative Min-Max retraining algorithm — the defender's model is w
 
 ## What were the results?
 
-Backdoor Attack Success Rate suppressed to 3.53%, while the defended model outperformed a pristine, unpoisoned baseline by +4.54%.
+On CIFAR-10 (ResNet-18, 5% poisoning budget): the clean baseline hits 86.60% accuracy, and an undefended attack collapses it to 78.65%. Spectral Signatures and SEVER only recover to ~80%. The Min-Max defense reaches 91.14% accuracy — the only method to beat the clean baseline — while suppressing Attack Success Rate to 3.53%, below the 10% random-guessing bound.
+
+## What is the "Shattered Model" phenomenon?
+
+An undefended clean-label attack at a 5% budget doesn't successfully install a usable backdoor (raw ASR is only 0.53%) — instead, the cross-contaminating gradients "shatter" the model's global feature confidence, tanking overall accuracy without the backdoor ever really firing.
+
+## How does the cold-start ablation prove the defense works?
+
+The cold-start ("amnesiac") defender re-initializes its weights every round instead of warm-starting from the prior round, so it can't exploit any memory of the attacker's strategy. It reaches 88.36% accuracy / 4.34% ASR, versus 91.14% / 3.53% for the warm-start defender — proving the ~2.78-point accuracy gap comes from anticipatory game-theoretic adaptation, not just more training.
 
 ---
 

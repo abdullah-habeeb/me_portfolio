@@ -15,6 +15,7 @@ export type ResearchDef = {
   architectureFlow: string[];
   highlights?: string[];
   contributions?: string[];
+  resultsTable?: { method: string; acc: string; asr: string; delta: string }[];
   stack: string[];
   accent: string;
   links: { github?: string; docs?: string; report?: string };
@@ -28,31 +29,40 @@ export const RESEARCH: ResearchDef[] = [
     role: "Research Publication • Under Review, Elsevier FGCS",
     status: "🟣 Under Review",
     problem:
-      "Clean-label data poisoning attacks craft correctly-labeled training samples that implant hidden, high-severity backdoors. Because the labels look right, standard anomaly filters that look for mislabeled or out-of-distribution data often fail to catch them.",
+      "Clean-label data poisoning attacks craft correctly-labeled training samples that implant hidden, high-severity backdoors — the adversary reassigns labels on strategically chosen source-class samples without touching the feature vectors at all. Because the data looks statistically and visually clean, spectral/gradient anomaly filters like Spectral Signatures and SEVER can't separate poison from legitimate data, and under a constrained 5% poisoning budget they end up removing high-value clean samples instead — accelerating the exact collapse they were meant to prevent.",
     work:
-      "Architected a Stackelberg game-theoretic pipeline from scratch in PyTorch to simulate and defend against clean-label poisoning attacks. The defender anticipates the attacker's optimal strategy and retrains against it using an iterative Min-Max algorithm with anticipatory warm-starting — proving both mathematically and empirically that existing anomaly filters fail under semantic data corruption.",
+      "Architected a Stackelberg game-theoretic pipeline from scratch in PyTorch to simulate and defend against clean-label poisoning attacks on CIFAR-10 (ResNet-18 backbone). The attacker moves first as a strategic leader, selecting the highest loss-margin samples in a source class to flip toward a target class; the defender moves second as a rational follower, running an iterative alternating Min-Max retraining loop that warm-starts each round from the prior round's weights so it retains structural memory of the attacker's strategy rather than re-learning from scratch. Ran a matched cold-start (amnesiac, re-initialized every round) ablation to isolate whether the defense's gains come from the game-theoretic anticipation itself or just extra training compute.",
     architectureFlow: [
-      "Clean-Label Poisoning Attack Simulation",
-      "Stackelberg Game Formulation (Attacker–Defender)",
-      "Iterative Min-Max Retraining (Anticipatory Warm-Starting)",
-      "Defended Model",
-      "Evaluation: Attack Success Rate vs. Clean Baseline"
+      "Clean-Label Poisoning Attack Simulation (loss-margin sample selection, 5% budget)",
+      "Stackelberg Game Formulation (Attacker–Defender, zero-sum)",
+      "Iterative Alternating Min-Max Retraining (Anticipatory Warm-Starting, 5 rounds)",
+      "Defended Model at Stackelberg Equilibrium",
+      "Evaluation vs. Spectral Signatures, SEVER, Confusion Training, Clean Baseline"
     ],
     highlights: [
-      "Backdoor Attack Success Rate suppressed to 3.53%",
-      "Defended model outperformed a pristine, unpoisoned baseline by +4.54%",
-      "Proved existing anomaly filters fail under semantic (clean-label) corruption",
-      "Discovered a novel Adversarial Regularization effect"
+      "Undefended attack collapses accuracy from 86.60% to 78.65% while raw ASR stays low (0.53%) — a 'Shattered Model' effect where the attack degrades general discriminative capability rather than installing a clean backdoor",
+      "Spectral Signatures and SEVER cap accuracy at ~80% because they strip high-entropy clean samples instead of the semantically indistinguishable poison",
+      "Min-Max defense reaches 91.14% accuracy — the only method to beat the clean baseline — while suppressing targeted Attack Success Rate to 3.53%, below the 10% random-guessing bound",
+      "Cold-start ablation (88.36% acc, 4.34% ASR) vs. warm-start (91.14% acc, 3.53% ASR) proves the gain is structurally attributable to defender anticipation, not extra compute",
+      "Discovered a novel Adversarial Regularization effect: repeated exposure to the attacker's hardest loss-margin samples acts as an unplanned curriculum that generalizes better than random-batch training"
     ],
     contributions: [
-      "Architected the Stackelberg attacker/defender pipeline from scratch in PyTorch",
-      "Engineered the iterative Min-Max retraining algorithm with anticipatory warm-starting",
-      "Ran the experiments that surfaced the Adversarial Regularization effect",
-      "Proved mathematically and empirically why existing anomaly filters fail here"
+      "Architected the full Stackelberg attacker/defender pipeline from scratch in PyTorch, including the loss-margin sample-selection attacker and the iterative Min-Max defender",
+      "Engineered the anticipatory warm-starting mechanism and designed the cold-start ablation that isolates its contribution",
+      "Ran and benchmarked all experiments on CIFAR-10/ResNet-18 against Spectral Signatures, SEVER, and Confusion Training baselines",
+      "Discovered, isolated, and formally analyzed the Adversarial Regularization effect",
     ],
-    stack: ["Python", "PyTorch", "Game Theory", "Min-Max Optimization"],
+    resultsTable: [
+      { method: "Clean Baseline", acc: "86.60%", asr: "0.13%", delta: "–" },
+      { method: "Poisoned (Undefended)", acc: "78.65%", asr: "0.53%", delta: "−7.95%" },
+      { method: "Spectral Signatures", acc: "79.73%", asr: "0.73%", delta: "−6.87%" },
+      { method: "SEVER", acc: "80.18%", asr: "0.53%", delta: "−6.43%" },
+      { method: "Confusion Training", acc: "89.20%", asr: "0.10%", delta: "+2.60%" },
+      { method: "Min-Max (Ours)", acc: "91.14%", asr: "3.53%", delta: "+4.54%" },
+    ],
+    stack: ["Python", "PyTorch", "ResNet-18", "Game Theory", "Min-Max Optimization"],
     accent: "var(--rose-accent)",
-    links: {},
+    links: { report: "/Adversarial_Regularization_Stackelberg.pdf" },
   }
 ];
 
@@ -207,6 +217,48 @@ export function ResearchPage({ research }: { research: ResearchDef }) {
         </FadeIn>
       )}
 
+      {research.resultsTable && (
+        <FadeIn delay={0.18}>
+          <section className="mt-10">
+            <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-muted-foreground mb-4">
+              Benchmark Results (CIFAR-10, 5% poisoning budget)
+            </h2>
+            <div className="overflow-x-auto rounded-xl border border-border/60">
+              <table className="w-full text-left text-[13px]">
+                <thead>
+                  <tr className="border-b border-border/60 bg-elevated/40 text-muted-foreground">
+                    <th className="px-4 py-2.5 font-medium">Method</th>
+                    <th className="px-4 py-2.5 font-medium">Accuracy</th>
+                    <th className="px-4 py-2.5 font-medium">ASR</th>
+                    <th className="px-4 py-2.5 font-medium">Δ vs. Clean</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {research.resultsTable.map((row) => (
+                    <tr
+                      key={row.method}
+                      className={`border-b border-border/40 last:border-0 ${
+                        row.method === "Min-Max (Ours)" ? "bg-elevated/30" : ""
+                      }`}
+                    >
+                      <td
+                        className="px-4 py-2.5 font-medium"
+                        style={row.method === "Min-Max (Ours)" ? { color: research.accent } : undefined}
+                      >
+                        {row.method}
+                      </td>
+                      <td className="px-4 py-2.5 text-foreground/90">{row.acc}</td>
+                      <td className="px-4 py-2.5 text-foreground/90">{row.asr}</td>
+                      <td className="px-4 py-2.5 text-foreground/90">{row.delta}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </FadeIn>
+      )}
+
       <FadeIn delay={0.2}>
         <section className="mt-10">
           <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-muted-foreground">
@@ -245,9 +297,11 @@ export function ResearchPage({ research }: { research: ResearchDef }) {
           {research.links.report && (
             <a
               href={research.links.report}
-              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-primary transition-colors hover:opacity-90"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-md border border-border/80 bg-elevated px-4 py-2 text-sm text-foreground transition-colors hover:bg-accent"
             >
-
+              <FileText className="h-4 w-4" /> Read Full Paper <span className="opacity-50">&rarr;</span>
             </a>
           )}
         </section>

@@ -47,6 +47,14 @@ Abdullah holds the following professional certifications:
 1. **SAP Backend Developer (CAP)** (2026) — Hands-on backend development with OData services and REST APIs on SAP BTP
 2. **SAP Business Data Cloud** (2026) — Enterprise data architecture, cloud-based analytics pipelines, and data governance frameworks
 
+# Courses
+
+Abdullah has also completed the following Cisco Networking Academy courses:
+
+1. **Python Essentials 1** (2024) — Cisco Networking Academy
+2. **Introduction to Cybersecurity** (2024) — Cisco Networking Academy
+3. **Operating System Basics** (2025) — Cisco Networking Academy
+
 # Achievements
 
 - **3rd Place, UI/UX Design Ideathon** (May 2025) — Designed and built a high-fidelity Figma prototype replicating the IKS Health platform
@@ -67,3 +75,6 @@ He's built CipherCare, a federated learning platform (Flower/PyTorch) with diffe
 
 ### What certifications does he hold?
 He holds SAP's Backend Developer (CAP) and Business Data Cloud certifications, both from 2026.
+
+### What courses has he completed?
+Three Cisco Networking Academy courses: Python Essentials 1 (2024), Introduction to Cybersecurity (2024), and Operating System Basics (2025).

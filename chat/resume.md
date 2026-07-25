@@ -103,8 +103,11 @@ Highlights:
 - Architected a Stackelberg game-theoretic pipeline from scratch in PyTorch to simulate and defend deep neural networks against high-severity clean-label data poisoning attacks
 - Engineered an iterative Min-Max retraining algorithm with anticipatory warm-starting — proving both mathematically and empirically that existing anomaly filters fail under semantic data corruption
 - Discovered a novel Adversarial Regularization effect, suppressing backdoor Attack Success Rates to just 3.53% while forcing the defended model to outperform a pristine, unpoisoned baseline by +4.54%
+- Benchmarked on CIFAR-10 (ResNet-18) against Spectral Signatures, SEVER, and Confusion Training under a constrained 5% poisoning budget; proved via cold-start vs. warm-start ablation that the gain is attributable to game-theoretic anticipation, not extra compute
 
-Stack: Python, PyTorch, Game Theory, Min-Max Optimization
+Stack: Python, PyTorch, ResNet-18, Game Theory, Min-Max Optimization
+
+Full paper: /Adversarial_Regularization_Stackelberg.pdf
 
 ---
 
@@ -143,6 +146,16 @@ Social Media & Design Head, AWS Student Builder Group, BMSITM (Nov 2025 – Pres
 SAP Backend Developer (CAP) — 2026: Hands-on backend dev with OData services & REST APIs on SAP BTP
 
 SAP Business Data Cloud — 2026: Certified in enterprise data architecture, cloud-based analytics pipelines, and data governance frameworks
+
+---
+
+# Courses
+
+Python Essentials 1 — Cisco Networking Academy, 2024
+
+Introduction to Cybersecurity — Cisco Networking Academy, 2024
+
+Operating System Basics — Cisco Networking Academy, 2025
 
 ---
 
