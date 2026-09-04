@@ -7,10 +7,7 @@ import {
   Contact as ContactIcon,
   FileText,
   FlaskConical,
-  Github,
   LineChart,
-  Linkedin,
-  Mail,
   RefreshCw,
   ShieldCheck,
   TerminalSquare,
@@ -18,20 +15,23 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type TabKind =
+// The 8 pages that always exist. Projects and research entries are no
+// longer part of this closed union — they're resolved at runtime from
+// merged content (seed + admin-added) via resolveTabDef() in
+// content-resolve.ts, so adding one never requires a code change here.
+export type StaticTabKind =
   | "about"
   | "projects-index"
-  | "project-renewly"
-  | "project-ciphercare"
-  | "project-pothole"
-  | "project-fare-calculator"
   | "research-index"
-  | "research-stackelberg"
   | "experience"
   | "skills"
   | "resume"
   | "contact"
   | "terminal";
+
+// Widened to any string (keeping autocomplete for the static ids) so a
+// project-*/research-* id — seed or admin-added — is a valid TabKind too.
+export type TabKind = StaticTabKind | (string & {});
 
 export type TabDef = {
   id: TabKind;
@@ -42,7 +42,7 @@ export type TabDef = {
   breadcrumb: string[];
 };
 
-export const TABS: Record<TabKind, TabDef> = {
+export const TABS: Record<StaticTabKind, TabDef> = {
   about: {
     id: "about",
     label: "About",
@@ -59,38 +59,6 @@ export const TABS: Record<TabKind, TabDef> = {
     accent: "var(--cyan-accent)",
     breadcrumb: ["Workspace", "Projects"],
   },
-  "project-renewly": {
-    id: "project-renewly",
-    label: "Renewly",
-    filename: "renewly.md",
-    icon: RefreshCw,
-    accent: "var(--emerald-accent)",
-    breadcrumb: ["Workspace", "Projects", "Renewly"],
-  },
-  "project-ciphercare": {
-    id: "project-ciphercare",
-    label: "CipherCare",
-    filename: "ciphercare.md",
-    icon: ShieldCheck,
-    accent: "var(--cyan-accent)",
-    breadcrumb: ["Workspace", "Projects", "CipherCare"],
-  },
-  "project-pothole": {
-    id: "project-pothole",
-    label: "Pothole Detection",
-    filename: "pothole.md",
-    icon: Construction,
-    accent: "var(--amber-accent)",
-    breadcrumb: ["Workspace", "Projects", "Pothole Detection"],
-  },
-  "project-fare-calculator": {
-    id: "project-fare-calculator",
-    label: "Auto Fare Calculator",
-    filename: "fare-calculator.md",
-    icon: Calculator,
-    accent: "var(--violet-accent)",
-    breadcrumb: ["Workspace", "Projects", "Auto Fare Calculator"],
-  },
   "research-index": {
     id: "research-index",
     label: "Research",
@@ -98,14 +66,6 @@ export const TABS: Record<TabKind, TabDef> = {
     icon: FlaskConical,
     accent: "var(--violet-accent)",
     breadcrumb: ["Workspace", "Research"],
-  },
-  "research-stackelberg": {
-    id: "research-stackelberg",
-    label: "Adversarial Regularization",
-    filename: "stackelberg.md",
-    icon: LineChart,
-    accent: "var(--rose-accent)",
-    breadcrumb: ["Workspace", "Research", "Adversarial Regularization"],
   },
   experience: {
     id: "experience",
@@ -149,16 +109,14 @@ export const TABS: Record<TabKind, TabDef> = {
   },
 };
 
-export const SOCIAL = {
-  github: "https://github.com/abdullah-habeeb",
-  linkedin: "https://www.linkedin.com/in/abdullahhabeeb/",
-  leetcode: "https://leetcode.com/u/abdullahhabeeb/",
-  email: "mailto:abdullahhh1426@gmail.com",
-  phone: "+91 9663953337",
+// Curated icons for the seed projects/research, keyed by content id. New
+// admin-added items fall back to a generic per-section icon (see
+// content-resolve.ts) — this map exists purely to keep the original 5
+// hand-picked icons rather than genericizing them too.
+export const SEED_ICON_BY_ID: Record<string, LucideIcon> = {
+  "project-renewly": RefreshCw,
+  "project-ciphercare": ShieldCheck,
+  "project-pothole": Construction,
+  "project-fare-calculator": Calculator,
+  "research-stackelberg": LineChart,
 };
-
-export const SOCIAL_LINKS = [
-  { label: "GitHub", href: SOCIAL.github, icon: Github },
-  { label: "LinkedIn", href: SOCIAL.linkedin, icon: Linkedin },
-  { label: "Email", href: SOCIAL.email, icon: Mail },
-];

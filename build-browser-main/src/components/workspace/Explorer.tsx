@@ -9,6 +9,7 @@ import {
   FlaskConical,
   FolderOpen,
   Github,
+  KeyRound,
   Linkedin,
   Mail,
   Moon,
@@ -16,13 +17,15 @@ import {
   TerminalSquare,
   User,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/lib/theme";
+import { useContent } from "@/lib/useContent";
 
-import { SOCIAL, TABS, type TabKind } from "./tabs-data";
+import { resolveTabDef } from "./content-resolve";
+import { type TabKind } from "./tabs-data";
 
 type TreeItem = {
   id: TabKind;
@@ -39,39 +42,9 @@ type TreeGroup = {
   defaultOpen?: boolean;
 };
 
-const GROUPS: TreeGroup[] = [
-  { id: "about", label: "About", icon: User, tabId: "about" },
-  {
-    id: "projects",
-    label: "Projects",
-    icon: FolderOpen,
-    tabId: "projects-index",
-    defaultOpen: true,
-    items: [
-      { id: "project-renewly", label: "Renewly", accent: "var(--emerald-accent)" },
-      { id: "project-ciphercare", label: "CipherCare", accent: "var(--cyan-accent)" },
-      { id: "project-pothole", label: "Pothole Detection", accent: "var(--amber-accent)" },
-      { id: "project-fare-calculator", label: "Auto Fare Calculator", accent: "var(--violet-accent)" },
-    ],
-  },
-  {
-    id: "research",
-    label: "Research",
-    icon: FlaskConical,
-    tabId: "research-index",
-    defaultOpen: true,
-    items: [
-      { id: "research-stackelberg", label: "Adversarial Regularization", accent: "var(--rose-accent)" },
-    ],
-  },
-  { id: "experience", label: "Experience", icon: Briefcase, tabId: "experience" },
-  { id: "skills", label: "Skills", icon: Braces, tabId: "skills" },
-  { id: "resume", label: "Resume", icon: FileText, tabId: "resume" },
-  { id: "contact", label: "Contact", icon: ContactIcon, tabId: "contact" },
-  { id: "terminal", label: "Terminal", icon: TerminalSquare, tabId: "terminal" },
-];
-
 const EXPAND_KEY = "workspace.explorer.groups";
+const STATIC_GROUP_IDS = ["about", "projects", "research", "experience", "skills", "resume", "contact", "terminal"];
+const DEFAULT_OPEN_GROUP_IDS = new Set(["projects", "research"]);
 
 type Props = {
   activeTab: TabKind | null;
@@ -79,9 +52,39 @@ type Props = {
 };
 
 export function Explorer({ activeTab, onOpen }: Props) {
+  const content = useContent();
+
+  const GROUPS: TreeGroup[] = useMemo(
+    () => [
+      { id: "about", label: "About", icon: User, tabId: "about" },
+      {
+        id: "projects",
+        label: "Projects",
+        icon: FolderOpen,
+        tabId: "projects-index",
+        defaultOpen: true,
+        items: content.projects.map((p) => ({ id: p.id, label: p.name, accent: p.accent })),
+      },
+      {
+        id: "research",
+        label: "Research",
+        icon: FlaskConical,
+        tabId: "research-index",
+        defaultOpen: true,
+        items: content.research.map((r) => ({ id: r.id, label: r.name, accent: r.accent })),
+      },
+      { id: "experience", label: "Experience", icon: Briefcase, tabId: "experience" },
+      { id: "skills", label: "Skills", icon: Braces, tabId: "skills" },
+      { id: "resume", label: "Resume", icon: FileText, tabId: "resume" },
+      { id: "contact", label: "Contact", icon: ContactIcon, tabId: "contact" },
+      { id: "terminal", label: "Terminal", icon: TerminalSquare, tabId: "terminal" },
+    ],
+    [content],
+  );
+
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
-    for (const g of GROUPS) init[g.id] = !!g.defaultOpen;
+    for (const id of STATIC_GROUP_IDS) init[id] = DEFAULT_OPEN_GROUP_IDS.has(id);
     return init;
   });
 
@@ -183,7 +186,7 @@ export function Explorer({ activeTab, onOpen }: Props) {
                     <div className="ml-4 border-l border-border/70 pl-2 py-0.5">
                       {group.items!.map((item) => {
                         const active = item.id === activeTab;
-                        const tab = TABS[item.id];
+                        const tab = resolveTabDef(item.id, content);
                         return (
                           <button
                             key={item.id}
@@ -216,9 +219,9 @@ export function Explorer({ activeTab, onOpen }: Props) {
       <div className="border-t border-border/60 p-3">
         <div className="flex items-center justify-between gap-1">
           {[
-            { icon: Github, href: SOCIAL.github, label: "GitHub" },
-            { icon: Linkedin, href: SOCIAL.linkedin, label: "LinkedIn" },
-            { icon: Mail, href: SOCIAL.email, label: "Email" },
+            { icon: Github, href: content.contact.github, label: "GitHub" },
+            { icon: Linkedin, href: content.contact.linkedin, label: "LinkedIn" },
+            { icon: Mail, href: `mailto:${content.contact.email}`, label: "Email" },
           ].map(({ icon: I, href, label }) => (
             <a
               key={label}
@@ -232,7 +235,17 @@ export function Explorer({ activeTab, onOpen }: Props) {
             </a>
           ))}
           <a
-            href="/Abdullah_Resume.pdf"
+            href="/admin"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Admin"
+            title="Admin"
+            className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
+          >
+            <KeyRound className="h-4 w-4" />
+          </a>
+          <a
+            href={content.resume.url}
             download="Abdullah_Resume.pdf"
             className="ml-1 inline-flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border/80 bg-elevated/60 px-2 py-1.5 text-xs text-foreground transition-colors hover:bg-elevated"
             title="Download Resume"

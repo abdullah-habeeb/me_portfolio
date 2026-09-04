@@ -1,124 +1,123 @@
-// Structured portfolio content that powers the context-aware AI assistant.
-// Every fact here is grounded in Abdullah's resume — no fabricated metrics.
+// Structured portfolio content that powers the context-aware AI assistant
+// and the terminal's `cat` command. Every fact here is grounded in
+// Abdullah's resume — no fabricated metrics.
+//
+// Project/research/certification/course docs are generated from the merged
+// content (seed + admin-added) instead of hand-written per item — add or
+// edit one through the admin terminal and the AI + terminal both pick it up
+// automatically, with nothing here to keep in sync.
 
-export type ContextKey =
-  | "about"
-  | "projects-index"
-  | "project-renewly"
-  | "project-ciphercare"
-  | "project-pothole"
-  | "project-fare-calculator"
-  | "research-index"
-  | "research-stackelberg"
-  | "experience"
-  | "skills"
-  | "resume"
-  | "contact";
+import type { AboutContent, ContactContent, CredentialItem, ExperienceContent, MergedContent, ProjectDef, ResearchDef, SkillGroup } from "@/data/types";
 
-export const PORTFOLIO_DOCS: Record<ContextKey, { title: string; body: string }> = {
-  about: {
-    title: "About Abdullah",
-    body: `Abdullah — B.E. Computer Science & Engineering, BMS Institute of Technology & Management, Bengaluru (2023–Present). CGPA 9.00/10.
-Full-stack and systems engineer who likes owning a project end-to-end — infra, backend, and UI — rather than one layer of the stack.
-Interests: Full-Stack Engineering, Backend Systems, DevOps & CI/CD, Federated & Privacy-Preserving ML, AI Agents, Applied Machine Learning, Adversarial Robustness.
-Based in Bengaluru, India.`,
-  },
-  "projects-index": {
-    title: "Projects overview",
-    body: `Featured: Renewly (Gmail-based automatic subscription tracker for India) and CipherCare (privacy-preserving federated learning platform for healthcare AI).
-Also: Pothole Detection Platform (full-stack dashcam pothole detection with a Roboflow YOLOv11 ML microservice) and Bengaluru Auto Fare Calculator (Google Maps-based official auto-rickshaw fare calculator).`,
-  },
-  "project-renewly": {
-    title: "Renewly — Every subscription. One quiet place.",
-    body: `Stack: React 19, Vite, TypeScript, Tailwind, Node.js/Express, Firebase Auth + Firestore, Plaid, Gmail API, Docker, Jenkins CI/CD.
-What it does: A full-stack subscription tracker that reads Gmail (read-only OAuth) to automatically detect recurring charges from bank-alert and receipt emails, tracks running monthly/yearly cost, and reminds users before renewals — built India-first since Plaid has no coverage of Indian banks.
-Architecture: React SPA talks to Firestore directly for realtime CRUD; an Express API handles Gmail OAuth scanning, Plaid Sandbox bank linking, and a daily reminder cron.
-CI/CD: real Jenkins pipeline — lint, unit tests, Docker build, Trivy security scan, push, deploy to Firebase, verify. 113 tests passing (Jest + Vitest).
-Live: https://subscription-hub-19cf9.web.app · GitHub: https://github.com/abdullah-habeeb/renewly-subscription-tracker`,
-  },
-  "project-ciphercare": {
-    title: "CipherCare — Privacy-Preserving Federated Learning for Healthcare AI",
-    body: `Stack: Python, PyTorch, Flower (flwr), FastAPI, React/Vite dashboard.
-What it does: Simulates 5 hospital nodes (ECG, vitals, X-ray, geriatric ECG, multimodal) collaboratively training a shared diagnostic model without sharing raw patient data.
-Architecture: A custom FedProxFairness Strategy on top of Flower combines FedProx (µ=0.01), fairness-weighted aggregation (0.6·AUROC² + 0.3·samples + 0.1·domain_relevance), differential privacy (ε=5.0, δ=1e-5, adaptive per-hospital noise), and domain relevance scoring (0.7·modality_similarity + 0.3·label_overlap). Every round is hash-chained (SHA-256 + Keccak256) into a blockchain-style audit log.
-GitHub: https://github.com/abdullah-habeeb/ciphercare`,
-  },
-  "project-pothole": {
-    title: "Pothole Detection Platform",
-    body: `Stack: React 18/TypeScript/Vite frontend, Node.js/Express/MongoDB backend, FastAPI ML microservice.
-What it does: Full-stack platform for detecting and managing potholes from uploaded dashcam video. Users upload footage; a dedicated FastAPI "ml-server" samples every 5th frame with OpenCV and sends frames to a Roboflow-hosted YOLOv11 model, returning a severity rating (high/medium/none) plus up to 5 detections with confidence, bounding box, and preview image. Results surface on an interactive map (React Leaflet) and an admin dashboard (Recharts), behind JWT-authenticated, role-gated routes.
-Architecture: three independently-run services — frontend (3000), Express backend (5000), FastAPI ml-server (8000) — deliberately decoupled so the Python/ML stack can scale or redeploy independently of the Node API.
-Why every 5th frame: a speed/coverage tradeoff — full-frame inference is expensive and mostly redundant since pothole framing barely changes between adjacent frames.
-GitHub: https://github.com/abdullah-habeeb/pothole`,
-  },
-  "project-fare-calculator": {
-    title: "Bengaluru Auto Fare Calculator",
-    body: `Stack: HTML5, CSS3, vanilla JavaScript, Google Maps JavaScript API (Places API for autocomplete, Distance Matrix API for road distance).
-What it does: Calculates the official Bengaluru auto-rickshaw fare for a trip — ₹35 minimum fare for the first 2 km, then ₹17/km after, with a 1.5x surcharge automatically applied for trips between 10 PM and 5 AM. Uses real road distance via the Distance Matrix API rather than straight-line distance, so the fare matches what a rider would actually be charged.
-Why vanilla JS: scoped as a one-week project specifically to practice direct API integration and DOM manipulation — a framework would have been overhead for a single-page calculator.
-GitHub: https://github.com/abdullah-habeeb/bengaluru-auto-fare-calculator`,
-  },
-  "research-index": {
-    title: "Research overview",
-    body: `RESEARCH OVERVIEW
-Abdullah's research paper "Adversarial Regularization via Stackelberg Equilibria: Securing Deep Neural Networks Against Clean-Label Data Poisoning" is under review at Elsevier Future Generation Computer Systems (FGCS). It defends deep neural networks against clean-label data poisoning using a Stackelberg game-theoretic Min-Max retraining framework, reaching 91.14% accuracy (+4.54% over the clean baseline) while suppressing the Attack Success Rate to 3.53% on CIFAR-10.`,
-  },
-  "research-stackelberg": {
-    title: "Research: Adversarial Regularization via Stackelberg Equilibria",
-    body: `Status: Under Review, Elsevier Future Generation Computer Systems (FGCS)
-Problem: Clean-label data poisoning attacks craft correctly-labeled samples that implant hidden backdoors, evading standard anomaly filters like Spectral Signatures and SEVER, which strip legitimate high-entropy samples instead of the semantically indistinguishable poison.
-Setup: CIFAR-10, ResNet-18 backbone, attack targets class 1 ("automobile") -> class 7 ("horse") under a constrained 5% poisoning budget. Attacker selects samples by highest loss margin.
-Work: Modeled the attacker-defender interaction as a two-player zero-sum Stackelberg game and built an iterative alternating Min-Max retraining defense from scratch in PyTorch, where the defender warm-starts each round from the prior round's weights.
-Key Results: Clean baseline 86.60% accuracy. Undefended poisoning collapses accuracy to 78.65% (a "Shattered Model" effect). Spectral Signatures and SEVER only reach ~80%. The Min-Max defense reaches 91.14% accuracy (+4.54% over clean baseline) while suppressing Attack Success Rate to 3.53% -- the only method to beat the clean baseline.
-Ablation: Cold-start (amnesiac) defender reaches 88.36% acc / 4.34% ASR vs. warm-start (adaptive) defender's 91.14% acc / 3.53% ASR, proving the gain comes from anticipatory game-theoretic adaptation, not extra compute.
-Discovery: A novel "Adversarial Regularization" effect -- being forced to repeatedly reconcile the attacker's hardest loss-margin samples acts as an unplanned curriculum that generalizes better than standard training.
-Full paper PDF: /Adversarial_Regularization_Stackelberg.pdf`,
-  },
-  experience: {
-    title: "Experience & Leadership",
-    body: `- Software Engineering Extern, Unisys (Dec 2025 – May 2026, Remote) — autonomous Windows event monitoring system, real-time dashboard, automated logging pipeline (10,000+ events).
-- Social Media & Design Head, AWS Student Builder Group, BMSITM (Nov 2025 – Present).
-Achievements: SAP Backend Developer (CAP) 2026, SAP Business Data Cloud 2026, 3rd Place UI/UX Design Ideathon (May 2025).`,
-  },
-  skills: {
-    title: "Skills & Certifications",
-    body: `Languages: C++, C, Python, Java, JavaScript.
-Full-Stack: React, Express.js, Node.js, Flask, REST APIs, HTML, CSS.
-Databases: PostgreSQL, MySQL, MongoDB, Firebase Firestore.
-DevOps: Docker, Docker Compose, Jenkins CI/CD, Nginx, Git, GitHub, Linux.
-AI/ML: LLMs, RAG, AI Agents, Prompt Engineering, Computer Vision (YOLO, MiDaS), Federated Learning.
+// The pages that are never a collection (no add/delete — one record each,
+// edited as a whole through the admin GUI's About/Experience/Skills/Resume/
+// Contact forms). Their docs are generated from that same merged record
+// below, so an edit through the GUI is reflected here with nothing to sync.
+export type StaticContextKey = "about" | "projects-index" | "research-index" | "experience" | "skills" | "resume" | "contact";
 
-Certifications:
-- SAP Backend Developer (CAP) — 2026
-- SAP Business Data Cloud — 2026
+// Widened so a project-*/research-* id — seed or admin-added — is a valid
+// ContextKey too, same trick as TabKind.
+export type ContextKey = StaticContextKey | (string & {});
 
-Courses:
-- Python Essentials 1 — Cisco Networking Academy, 2024
-- Introduction to Cybersecurity — Cisco Networking Academy, 2024
-- Operating System Basics — Cisco Networking Academy, 2025`,
-  },
-  resume: {
-    title: "Resume",
-    body: `Full resume PDF is available in the Resume tab. Contains Education, Experience (Unisys), Projects (Renewly, CipherCare), Research Publications, Certifications & Achievements, and Technical Skills.`,
-  },
-  contact: {
-    title: "Contact",
-    body: `Email: abdullahhh1426@gmail.com
-Phone: +91 9663953337
-Location: Bengaluru, India
-LinkedIn and GitHub links are available in the Contact section.`,
-  },
+type Doc = { title: string; body: string };
+
+const RESUME_DOC: Doc = {
+  title: "Resume",
+  body: "Full resume PDF is available in the Resume tab. Contains Education, Experience, Projects, Research Publications, Certifications & Achievements, and Technical Skills.",
 };
 
-const ALL_DOCS = Object.values(PORTFOLIO_DOCS)
-  .map((d) => `## ${d.title}\n${d.body}`)
-  .join("\n\n");
+function aboutToDoc(a: AboutContent): Doc {
+  const lines = [a.bio];
+  if (a.interests.length) lines.push(`Interests: ${a.interests.join(", ")}.`);
+  if (a.highlights.length) lines.push(`Highlights: ${a.highlights.map((h) => `${h.title} — ${h.detail}`).join(" | ")}`);
+  return { title: "About Abdullah", body: lines.join("\n") };
+}
 
-export function buildSystemPrompt(context?: ContextKey | null): string {
-  const scoped = context ? PORTFOLIO_DOCS[context] : null;
+function experienceToDoc(e: ExperienceContent): Doc {
+  const lines = e.roles.map((r) => `- ${r.role}, ${r.org} (${r.period}) — ${r.details}`);
+  if (e.achievements.length) lines.push(`Achievements: ${e.achievements.map((a) => a.text).join(", ")}.`);
+  return { title: "Experience & Leadership", body: lines.join("\n") || "No experience listed yet." };
+}
+
+function contactToDoc(c: ContactContent): Doc {
+  return {
+    title: "Contact",
+    body: `Email: ${c.email}\nPhone: ${c.phone}\nLocation: ${c.location}\nLinkedIn: ${c.linkedin}\nGitHub: ${c.github}`,
+  };
+}
+
+function skillGroupLines(groups: SkillGroup[]): string {
+  return groups.map((g) => `${g.category}: ${g.items.join(", ")}.`).join("\n");
+}
+
+function projectToDoc(p: ProjectDef): Doc {
+  const lines = [`Stack: ${p.stack.join(", ")}.`, `What it does: ${p.problem}${p.solution ? " " + p.solution : ""}`];
+  if (p.architecture) lines.push(`Architecture: ${p.architecture}`);
+  if (p.engineeringDecisions?.length) {
+    lines.push(`Key decisions: ${p.engineeringDecisions.map((d) => `${d.name} — ${d.reason}`).join(" | ")}`);
+  }
+  if (p.challenges?.length) lines.push(`Challenges: ${p.challenges.join("; ")}`);
+  if (p.links.demo) lines.push(`Live: ${p.links.demo}`);
+  if (p.links.github) lines.push(`GitHub: ${p.links.github}`);
+  return { title: p.name, body: lines.join("\n") };
+}
+
+function researchToDoc(r: ResearchDef): Doc {
+  const lines = [`Status: ${r.status}.`, `Problem: ${r.problem}`, `Work: ${r.work}`];
+  if (r.highlights?.length) lines.push(`Key results: ${r.highlights.join("; ")}`);
+  if (r.resultsTable?.length) {
+    lines.push(`Benchmark: ${r.resultsTable.map((row) => `${row.method} — ${row.acc} acc / ${row.asr} ASR`).join("; ")}`);
+  }
+  if (r.links.report) lines.push(`Full paper: ${r.links.report}`);
+  if (r.links.github) lines.push(`GitHub: ${r.links.github}`);
+  return { title: r.name, body: lines.join("\n") };
+}
+
+function credentialLines(items: CredentialItem[]): string {
+  return items.length ? items.map((c) => `- ${c.name} — ${c.issuer}`).join("\n") : "- none listed";
+}
+
+// Builds the full { id -> doc } map for the current merged content. This is
+// the single source both the AI system prompt and the terminal's `cat`
+// command read from.
+export function buildDocMap(content: MergedContent): Record<string, Doc> {
+  const docs: Record<string, Doc> = { resume: RESUME_DOC };
+
+  for (const p of content.projects) docs[p.id] = projectToDoc(p);
+  for (const r of content.research) docs[r.id] = researchToDoc(r);
+
+  docs.about = aboutToDoc(content.about);
+  docs.experience = experienceToDoc(content.experience);
+  docs.contact = contactToDoc(content.contact);
+
+  docs["projects-index"] = {
+    title: "Projects overview",
+    body:
+      content.projects.map((p) => `${p.featured ? "[Featured] " : ""}${p.name} — ${p.summary}`).join("\n") ||
+      "No projects listed yet.",
+  };
+  docs["research-index"] = {
+    title: "Research overview",
+    body: content.research.map((r) => `${r.name} (${r.status}) — ${r.summary}`).join("\n") || "No research published yet.",
+  };
+  docs.skills = {
+    title: "Skills & Certifications",
+    body: `${skillGroupLines(content.skillGroups)}\n\nCertifications:\n${credentialLines(content.certifications)}\n\nCourses:\n${credentialLines(content.courses)}`,
+  };
+
+  return docs;
+}
+
+export function buildSystemPrompt(context: ContextKey | null | undefined, content: MergedContent): string {
+  const docs = buildDocMap(content);
+  const scoped = context ? docs[context] : null;
   const scopeHeader = scoped
     ? `The user is currently viewing: **${scoped.title}**. Prefer answering from this section first, but you may draw on the rest of the portfolio when helpful.`
     : `No specific section is focused. Answer from the entire portfolio.`;
+
+  const allDocs = Object.values(docs)
+    .map((d) => `## ${d.title}\n${d.body}`)
+    .join("\n\n");
 
   return `You are the AI assistant embedded inside Abdullah's engineering workspace portfolio. Answer questions about his work concisely, warmly, and accurately.
 
@@ -132,10 +131,6 @@ ${scopeHeader}
 - If asked something not in the portfolio, say you're not sure and suggest the Contact section.
 - Never fabricate. If a detail isn't present, say "not documented yet" or "currently under development."
 
-${scoped ? `# Focused section\n## ${scoped.title}\n${scoped.body}\n\n` : ""}
-# Full portfolio
-${ALL_DOCS}`;
+${scoped ? `# Focused section\n## ${scoped.title}\n${scoped.body}\n\n` : ""}# Full portfolio
+${allDocs}`;
 }
-
-// Legacy export retained for compatibility.
-export const PORTFOLIO_CONTEXT = buildSystemPrompt(null);

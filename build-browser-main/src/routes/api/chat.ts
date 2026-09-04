@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
 import { createGeminiProvider } from "@/lib/gemini.server";
+import { getMergedContent } from "@/lib/content-server";
 import { buildSystemPrompt, type ContextKey } from "@/lib/portfolio-content";
 
 type ChatRequestBody = { messages?: unknown; context?: unknown };
@@ -19,10 +20,11 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Missing GEMINI_API_KEY", { status: 500 });
         }
         const ctx = typeof context === "string" ? (context as ContextKey) : null;
+        const content = await getMergedContent();
         const gemini = createGeminiProvider(key);
         const result = streamText({
           model: gemini("gemini-3.6-flash"),
-          system: buildSystemPrompt(ctx),
+          system: buildSystemPrompt(ctx, content),
           messages: await convertToModelMessages(messages as UIMessage[]),
         });
         return result.toUIMessageStreamResponse({

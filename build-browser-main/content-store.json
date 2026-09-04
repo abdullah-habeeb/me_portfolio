@@ -1,0 +1,144 @@
+{
+  "projects": {
+    "overrides": {},
+    "additions": [
+      {
+        "name": "Youtube Clone",
+        "summary": "This is a responsive YouTube.com homepage clone built using HTML5 and CSS3. It replicates the layout and design of the official YouTube website, including the header, sidebar, and video grid.",
+        "problem": "A fully responsive and pixel-perfect clone of the YouTube homepage built using HTML5 and CSS3. Includes a fixed header, collapsible sidebar, video grid layout, and interactive UI elements like tooltips and notification badges. Perfect for practicing layout design with Flexbox, CSS Grid, and media queries.",
+        "architecture": "youtube-clone ─ index.html # Main HTML file (youtube.html) ─ styles ─ general.css # General typography and layout styles ─ header.css # Styles for top header and nav icons ─ sidebar.css # Sidebar styles (left panel) ─ video.css # Video grid layout and responsiveness ─ icons # SVG and JPEG icon assets ─ thumbnails # Video thumbnail images ─ channel-pictures # Channel profile pictures ─ README.md # Project documentation",
+        "stack": [
+          "HTML5",
+          "CSS3"
+        ],
+        "links": {
+          "github": "https://github.com/abdullah-habeeb/Youtube-Clone.git"
+        },
+        "id": "project-youtube-clone",
+        "accent": "var(--violet-accent)"
+      }
+    ],
+    "deletedIds": []
+  },
+  "research": {
+    "overrides": {},
+    "additions": [],
+    "deletedIds": []
+  },
+  "certifications": {
+    "overrides": {},
+    "additions": [],
+    "deletedIds": []
+  },
+  "courses": {
+    "overrides": {},
+    "additions": [],
+    "deletedIds": []
+  },
+  "skillGroups": {
+    "overrides": {},
+    "additions": [],
+    "deletedIds": []
+  },
+  "about": {
+    "override": {
+      "bio": "I'm Abdullah, a Computer Science student at BMS Institute of Technology & Management, Bengaluru. I like owning systems end-to-end — infra, backend, and UI together — rather than just one layer of the stack. My work spans full-stack fintech platforms, privacy-preserving federated learning, DevOps pipelines, and adversarial ML research, with a strong focus on building things from scratch when no existing framework fits.",
+      "photo": "/abdullah.jpg",
+      "stats": [
+        {
+          "label": "CGPA",
+          "value": "8.98"
+        },
+        {
+          "label": "Research Publications",
+          "value": "1"
+        },
+        {
+          "label": "Projects Shipped",
+          "value": "3"
+        },
+        {
+          "label": "Hackathons",
+          "value": "3"
+        }
+      ],
+      "interests": [
+        "Full-Stack Engineering",
+        "Backend Systems",
+        "DevOps & CI/CD",
+        "Federated Learning",
+        "AI Agents",
+        "Applied Machine Learning",
+        "Adversarial Robustness"
+      ],
+      "highlights": [
+        {
+          "id": "highlight-unisys",
+          "title": "Software Engineering Extern — Unisys",
+          "detail": "Autonomous Windows event monitoring system (Python/Flask + PowerShell), built end-to-end with no existing framework to extend.",
+          "accent": "var(--rose-accent)",
+          "featured": true
+        },
+        {
+          "id": "highlight-research",
+          "title": "Research — Under Review, Elsevier FGCS",
+          "detail": "Stackelberg game-theoretic defense against clean-label data poisoning, from scratch in PyTorch.",
+          "accent": "var(--violet-accent)"
+        },
+        {
+          "id": "highlight-community",
+          "title": "☁️ Community & Leadership",
+          "detail": "Social Media & Design Head — AWS Student Builder Group, BMSITM",
+          "accent": "var(--amber-accent)",
+          "featured": false
+        },
+        {
+          "id": "highlight-builder",
+          "title": "🛠 Builder Mindset",
+          "detail": "End-to-end ownership • Built from scratch when no framework fits • Independently testable modules • Engineering-first thinking",
+          "accent": "var(--emerald-accent)",
+          "featured": false
+        }
+      ]
+    }
+  },
+  "experience": {
+    "override": {
+      "roles": [
+        {
+          "id": "role-unisys",
+          "role": "Software Engineering Extern",
+          "org": "Unisys — Remote",
+          "period": "Dec 2025 – July 2026",
+          "accent": "var(--rose-accent)",
+          "details": "Built a Python (Flask) + PowerShell system that autonomously monitors Windows OS events and applies rules-based corrections, designed end-to-end with no existing framework to extend. Shipped a real-time event-tracking dashboard with severity classification and remediation scheduling, owning the full stack from backend logic to the operator-facing UI. Engineered an automated logging pipeline processing 10,000+ system events with metadata enrichment for scalable downstream analytics."
+        },
+        {
+          "id": "role-aws-sbg",
+          "role": "Social Media & Design Head",
+          "org": "AWS Student Builder Group, BMSITM",
+          "period": "Nov 2025 – Present",
+          "accent": "var(--amber-accent)",
+          "details": "Led end-to-end design operations and cross-functional coordination for the college's AWS community chapter."
+        }
+      ],
+      "achievements": [
+        {
+          "id": "achievement-sap-cap",
+          "text": "SAP Backend Developer (CAP) — 2026"
+        },
+        {
+          "id": "achievement-sap-bdc",
+          "text": "SAP Business Data Cloud — 2026"
+        },
+        {
+          "id": "achievement-ideathon",
+          "text": "3rd Place, UI/UX Design Ideathon (May 2025) — high-fidelity Figma prototype replicating the IKS Health platform"
+        }
+      ]
+    }
+  },
+  "contact": {
+    "override": {}
+  }
+}

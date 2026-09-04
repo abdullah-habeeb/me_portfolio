@@ -2,34 +2,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+import { useContent } from "@/lib/useContent";
+
 import { FadeIn, SectionHeader } from "../ui";
 
-const EXPERIENCE = [
-  {
-    role: "Software Engineering Extern",
-    org: "Unisys — Remote",
-    period: "Dec 2025 – May 2026",
-    accent: "var(--rose-accent)",
-    details:
-      "Built a Python (Flask) + PowerShell system that autonomously monitors Windows OS events and applies rules-based corrections, designed end-to-end with no existing framework to extend. Shipped a real-time event-tracking dashboard with severity classification and remediation scheduling, owning the full stack from backend logic to the operator-facing UI. Engineered an automated logging pipeline processing 10,000+ system events with metadata enrichment for scalable downstream analytics.",
-  },
-  {
-    role: "Social Media & Design Head",
-    org: "AWS Student Builder Group, BMSITM",
-    period: "Nov 2025 – Present",
-    accent: "var(--amber-accent)",
-    details:
-      "Led end-to-end design operations and cross-functional coordination for the college's AWS community chapter.",
-  },
-];
-
-const ACHIEVEMENTS: Array<{ text: string; link?: string }> = [
-  { text: "SAP Backend Developer (CAP) — 2026" },
-  { text: "SAP Business Data Cloud — 2026" },
-  { text: "3rd Place, UI/UX Design Ideathon (May 2025) — high-fidelity Figma prototype replicating the IKS Health platform" },
-];
-
 export function ExperienceSection() {
+  const content = useContent();
+  const { roles, achievements } = content.experience;
   const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="mx-auto max-w-5xl px-8 py-10">
@@ -42,10 +21,10 @@ export function ExperienceSection() {
       </FadeIn>
 
       <div className="grid gap-3">
-        {EXPERIENCE.map((e, i) => {
+        {roles.map((e, i) => {
           const isOpen = open === i;
           return (
-            <FadeIn key={e.role} delay={0.04 * i}>
+            <FadeIn key={e.id} delay={0.04 * i}>
               <button
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="w-full rounded-xl border border-border/70 bg-card/60 p-5 text-left transition-colors hover:border-border"
@@ -98,8 +77,8 @@ export function ExperienceSection() {
             Achievements
           </div>
           <ul className="space-y-2 text-sm text-foreground/90">
-            {ACHIEVEMENTS.map((a) => (
-              <li key={a.text} className="flex items-center gap-2">
+            {achievements.map((a) => (
+              <li key={a.id} className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                 <span>{a.text}</span>
                 {a.link && (

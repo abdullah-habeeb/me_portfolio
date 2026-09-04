@@ -2,49 +2,49 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Bot, ChevronRight, Command, X } from "lucide-react";
 import { useCallback, useMemo, useState, useRef, useEffect } from "react";
 
+import type { MergedContent } from "@/data/types";
+import { useContent } from "@/lib/useContent";
+
 import { AIPanel } from "./AIPanel";
 import { CommandPalette } from "./CommandPalette";
+import { resolveTabDef } from "./content-resolve";
 import { Explorer } from "./Explorer";
-import { TABS, type TabKind } from "./tabs-data";
-import { tabToContext } from "./context-labels";
+import { type TabKind } from "./tabs-data";
+import { resolveContextMeta, tabToContext } from "./context-labels";
 import { AboutSection } from "./sections/About";
 import { ContactSection } from "./sections/Contact";
 import { ExperienceSection } from "./sections/Experience";
-import { PROJECTS, ProjectPage, ProjectsIndex } from "./sections/Projects";
-import { RESEARCH, ResearchPage, ResearchIndex } from "./sections/Research";
+import { ProjectPage, ProjectsIndex } from "./sections/Projects";
+import { ResearchPage, ResearchIndex } from "./sections/Research";
 import { ResumeSection } from "./sections/Resume";
 import { SkillsSection } from "./sections/Skills";
 import { TerminalSection } from "./sections/Terminal";
 
-function renderTab(id: TabKind, open: (t: TabKind) => void) {
+function renderTab(id: TabKind, open: (t: TabKind) => void, content: MergedContent) {
   switch (id) {
     case "about":
       return <AboutSection onOpen={open} />;
     case "projects-index":
-      return <ProjectsIndex onOpen={open} />;
-    case "project-renewly":
-    case "project-ciphercare":
-    case "project-pothole":
-    case "project-fare-calculator": {
-      const project = PROJECTS.find((p) => p.id === id)!;
-      return <ProjectPage project={project} />;
-    }
+      return <ProjectsIndex projects={content.projects} onOpen={open} />;
     case "research-index":
-      return <ResearchIndex onOpen={open} />;
-    case "research-stackelberg": {
-      const research = RESEARCH.find((r) => r.id === id)!;
-      return <ResearchPage research={research} />;
-    }
+      return <ResearchIndex research={content.research} onOpen={open} />;
     case "experience":
       return <ExperienceSection />;
     case "skills":
-      return <SkillsSection />;
+      return <SkillsSection skillGroups={content.skillGroups} certifications={content.certifications} courses={content.courses} />;
     case "resume":
       return <ResumeSection />;
     case "contact":
       return <ContactSection />;
     case "terminal":
-      return <TerminalSection onOpen={open} />;
+      return <TerminalSection onOpen={open} content={content} />;
+    default: {
+      const project = content.projects.find((p) => p.id === id);
+      if (project) return <ProjectPage project={project} />;
+      const research = content.research.find((r) => r.id === id);
+      if (research) return <ResearchPage research={research} />;
+      return null;
+    }
   }
 }
 
@@ -89,13 +89,15 @@ export function Workspace() {
     [active],
   );
 
-  const tab = TABS[active];
+  const content = useContent();
+  const tab = resolveTabDef(active, content);
   const isResume = active === "resume";
 
   const chatContext = useMemo(
     () => (contextOverride === "cleared" ? null : tabToContext(active)),
     [active, contextOverride],
   );
+  const chatContextMeta = useMemo(() => resolveContextMeta(chatContext, content), [chatContext, content]);
 
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -117,7 +119,7 @@ export function Workspace() {
           <div className="flex flex-1 items-center overflow-x-auto">
             <AnimatePresence initial={false}>
               {openTabs.map((id) => {
-                const t = TABS[id];
+                const t = resolveTabDef(id, content);
                 const Icon = t.icon;
                 const isActive = active === id;
                 return (
@@ -207,7 +209,7 @@ export function Workspace() {
                 transition={{ duration: 0.22, ease: [0.22, 0.61, 0.36, 1] }}
                 className="h-full"
               >
-                {renderTab(active, open)}
+                {renderTab(active, open, content)}
               </motion.div>
             </AnimatePresence>
           )}
@@ -227,7 +229,7 @@ export function Workspace() {
             <span className="hidden md:inline">
               Context ·{" "}
               <span className="text-foreground/80">
-                {chatContext ? TABS[active].label : "Entire portfolio"}
+                {chatContext ? tab.label : "Entire portfolio"}
               </span>
             </span>
           </div>
@@ -265,6 +267,7 @@ export function Workspace() {
               <div className="flex h-full w-full flex-col">
                 <AIPanel
                   context={chatContext}
+                  meta={chatContextMeta}
                   onClearContext={() => setContextOverride("cleared")}
                 />
               </div>

@@ -2,6 +2,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CornerDownLeft, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useContent } from "@/lib/useContent";
+
+import { resolveTabDef } from "./content-resolve";
 import { TABS, type TabKind } from "./tabs-data";
 
 type Props = {
@@ -17,13 +20,6 @@ type Entry = {
   keywords: string;
 };
 
-const ENTRIES: Entry[] = (Object.values(TABS) as (typeof TABS)[TabKind][]).map((tab) => ({
-  id: tab.id,
-  label: tab.label,
-  sublabel: tab.breadcrumb.slice(0, -1).join(" / ") || "Workspace",
-  keywords: `${tab.label} ${tab.breadcrumb.join(" ")} ${tab.filename}`.toLowerCase(),
-}));
-
 function scoreMatch(query: string, entry: Entry): number {
   const q = query.trim().toLowerCase();
   if (!q) return 1;
@@ -34,16 +30,37 @@ function scoreMatch(query: string, entry: Entry): number {
 }
 
 export function CommandPalette({ open, onClose, onOpenTab }: Props) {
+  const content = useContent();
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const entries: Entry[] = useMemo(() => {
+    const staticEntries = (Object.values(TABS) as (typeof TABS)[keyof typeof TABS][]).map((tab) => ({
+      id: tab.id,
+      label: tab.label,
+      sublabel: tab.breadcrumb.slice(0, -1).join(" / ") || "Workspace",
+      keywords: `${tab.label} ${tab.breadcrumb.join(" ")} ${tab.filename}`.toLowerCase(),
+    }));
+    const dynamicEntries = [...content.projects, ...content.research].map((item) => {
+      const tab = resolveTabDef(item.id, content);
+      return {
+        id: tab.id,
+        label: tab.label,
+        sublabel: tab.breadcrumb.slice(0, -1).join(" / ") || "Workspace",
+        keywords: `${tab.label} ${tab.breadcrumb.join(" ")} ${tab.filename}`.toLowerCase(),
+      };
+    });
+    return [...staticEntries, ...dynamicEntries];
+  }, [content]);
+
   const results = useMemo(() => {
-    return ENTRIES.map((e) => ({ entry: e, score: scoreMatch(query, e) }))
+    return entries
+      .map((e) => ({ entry: e, score: scoreMatch(query, e) }))
       .filter((r) => r.score > 0)
       .sort((a, b) => b.score - a.score)
       .map((r) => r.entry);
-  }, [query]);
+  }, [entries, query]);
 
   useEffect(() => {
     if (open) {
@@ -125,7 +142,7 @@ export function CommandPalette({ open, onClose, onOpenTab }: Props) {
                 </div>
               ) : (
                 results.map((entry, i) => {
-                  const tab = TABS[entry.id];
+                  const tab = resolveTabDef(entry.id, content);
                   const Icon = tab.icon;
                   const isSelected = i === selected;
                   return (

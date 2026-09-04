@@ -1,45 +1,16 @@
+import type { CredentialItem, SkillGroup } from "@/data/types";
+
 import { Card, Chip, FadeIn, SectionHeader } from "../ui";
 
-const SKILLS: Array<{ category: string; items: string[]; accent: string }> = [
-  {
-    category: "Languages",
-    items: ["C++", "C", "Python", "Java", "JavaScript"],
-    accent: "var(--cyan-accent)",
-  },
-  {
-    category: "Full-Stack",
-    items: ["React", "Express.js", "Node.js", "Flask", "REST APIs", "HTML", "CSS"],
-    accent: "var(--violet-accent)",
-  },
-  {
-    category: "Databases",
-    items: ["PostgreSQL", "MySQL", "MongoDB", "Firebase Firestore"],
-    accent: "var(--emerald-accent)",
-  },
-  {
-    category: "DevOps",
-    items: ["Docker", "Docker Compose", "Jenkins CI/CD", "Nginx", "Git", "GitHub", "Linux"],
-    accent: "var(--amber-accent)",
-  },
-  {
-    category: "AI / ML",
-    items: ["LLMs", "RAG", "AI Agents", "Prompt Engineering", "Computer Vision (YOLO, MiDaS)", "Federated Learning"],
-    accent: "var(--rose-accent)",
-  },
-];
-
-const CERTIFICATIONS = [
-  { name: "SAP Backend Developer (CAP)", issuer: "SAP · 2026" },
-  { name: "SAP Business Data Cloud", issuer: "SAP · 2026" },
-];
-
-const COURSES = [
-  { name: "Python Essentials 1", issuer: "Cisco Networking Academy · 2024" },
-  { name: "Introduction to Cybersecurity", issuer: "Cisco Networking Academy · 2024" },
-  { name: "Operating System Basics", issuer: "Cisco Networking Academy · 2025" },
-];
-
-export function SkillsSection() {
+export function SkillsSection({
+  skillGroups,
+  certifications,
+  courses,
+}: {
+  skillGroups: SkillGroup[];
+  certifications: CredentialItem[];
+  courses: CredentialItem[];
+}) {
   return (
     <div className="mx-auto max-w-5xl px-8 py-10">
       <FadeIn>
@@ -52,8 +23,8 @@ export function SkillsSection() {
 
       <FadeIn delay={0.05}>
         <div className="grid gap-4 md:grid-cols-2">
-          {SKILLS.map((group) => (
-            <Card key={group.category}>
+          {skillGroups.map((group) => (
+            <Card key={group.id}>
               <div
                 className="mb-3 text-xs font-medium uppercase tracking-wider"
                 style={{ color: group.accent }}
@@ -78,8 +49,8 @@ export function SkillsSection() {
             Certifications
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            {CERTIFICATIONS.map((c) => (
-              <Card key={c.name}>
+            {certifications.map((c) => (
+              <Card key={c.id}>
                 <div className="text-sm font-medium text-foreground">{c.name}</div>
                 <div className="mt-1 text-xs text-muted-foreground">{c.issuer}</div>
               </Card>
@@ -94,8 +65,8 @@ export function SkillsSection() {
             Courses
           </div>
           <div className="grid gap-3 md:grid-cols-3">
-            {COURSES.map((c) => (
-              <Card key={c.name}>
+            {courses.map((c) => (
+              <Card key={c.id}>
                 <div className="text-sm font-medium text-foreground">{c.name}</div>
                 <div className="mt-1 text-xs text-muted-foreground">{c.issuer}</div>
               </Card>

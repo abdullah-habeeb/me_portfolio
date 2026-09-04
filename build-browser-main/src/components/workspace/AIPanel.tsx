@@ -18,8 +18,6 @@ import ReactMarkdown from "react-markdown";
 
 import type { ContextKey } from "@/lib/portfolio-content";
 
-import { CONTEXT_META } from "./context-labels";
-
 const SUGGESTIONS_BY_CONTEXT: Partial<Record<ContextKey, string[]>> = {
   about: [
     "Give me a 30-second intro to Abdullah.",
@@ -117,12 +115,15 @@ function messageText(m: UIMessage) {
   return m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
 }
 
+type ContextMeta = { label: string; dot: string; icon: string };
+
 type Props = {
   context: ContextKey | null;
+  meta: ContextMeta | null;
   onClearContext: () => void;
 };
 
-export function AIPanel({ context, onClearContext }: Props) {
+export function AIPanel({ context, meta, onClearContext }: Props) {
   const [chatId, setChatId] = useState(() => `chat-${Date.now()}`);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -164,8 +165,6 @@ export function AIPanel({ context, onClearContext }: Props) {
     if (context && SUGGESTIONS_BY_CONTEXT[context]) return SUGGESTIONS_BY_CONTEXT[context]!;
     return DEFAULT_SUGGESTIONS;
   }, [context]);
-
-  const meta = context ? CONTEXT_META[context] : null;
 
   const newChat = () => {
     stop();

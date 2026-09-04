@@ -9,12 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiContentRouteImport } from './routes/api/content'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiAdminUploadRouteImport } from './routes/api/admin/upload'
+import { Route as ApiAdminSessionRouteImport } from './routes/api/admin/session'
+import { Route as ApiAdminMutateRouteImport } from './routes/api/admin/mutate'
+import { Route as ApiAdminLogoutRouteImport } from './routes/api/admin/logout'
+import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiContentRoute = ApiContentRouteImport.update({
+  id: '/api/content',
+  path: '/api/content',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -22,40 +39,135 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminUploadRoute = ApiAdminUploadRouteImport.update({
+  id: '/api/admin/upload',
+  path: '/api/admin/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminSessionRoute = ApiAdminSessionRouteImport.update({
+  id: '/api/admin/session',
+  path: '/api/admin/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminMutateRoute = ApiAdminMutateRouteImport.update({
+  id: '/api/admin/mutate',
+  path: '/api/admin/mutate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLogoutRoute = ApiAdminLogoutRouteImport.update({
+  id: '/api/admin/logout',
+  path: '/api/admin/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLoginRoute = ApiAdminLoginRouteImport.update({
+  id: '/api/admin/login',
+  path: '/api/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/content': typeof ApiContentRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/mutate': typeof ApiAdminMutateRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
+  '/api/admin/upload': typeof ApiAdminUploadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/content': typeof ApiContentRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/mutate': typeof ApiAdminMutateRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
+  '/api/admin/upload': typeof ApiAdminUploadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/content': typeof ApiContentRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/mutate': typeof ApiAdminMutateRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
+  '/api/admin/upload': typeof ApiAdminUploadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/api/chat'
+    | '/api/content'
+    | '/api/admin/login'
+    | '/api/admin/logout'
+    | '/api/admin/mutate'
+    | '/api/admin/session'
+    | '/api/admin/upload'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/chat'
-  id: '__root__' | '/' | '/api/chat'
+  to:
+    | '/'
+    | '/admin'
+    | '/api/chat'
+    | '/api/content'
+    | '/api/admin/login'
+    | '/api/admin/logout'
+    | '/api/admin/mutate'
+    | '/api/admin/session'
+    | '/api/admin/upload'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/api/chat'
+    | '/api/content'
+    | '/api/admin/login'
+    | '/api/admin/logout'
+    | '/api/admin/mutate'
+    | '/api/admin/session'
+    | '/api/admin/upload'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiContentRoute: typeof ApiContentRoute
+  ApiAdminLoginRoute: typeof ApiAdminLoginRoute
+  ApiAdminLogoutRoute: typeof ApiAdminLogoutRoute
+  ApiAdminMutateRoute: typeof ApiAdminMutateRoute
+  ApiAdminSessionRoute: typeof ApiAdminSessionRoute
+  ApiAdminUploadRoute: typeof ApiAdminUploadRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/content': {
+      id: '/api/content'
+      path: '/api/content'
+      fullPath: '/api/content'
+      preLoaderRoute: typeof ApiContentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -65,12 +177,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/upload': {
+      id: '/api/admin/upload'
+      path: '/api/admin/upload'
+      fullPath: '/api/admin/upload'
+      preLoaderRoute: typeof ApiAdminUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/session': {
+      id: '/api/admin/session'
+      path: '/api/admin/session'
+      fullPath: '/api/admin/session'
+      preLoaderRoute: typeof ApiAdminSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/mutate': {
+      id: '/api/admin/mutate'
+      path: '/api/admin/mutate'
+      fullPath: '/api/admin/mutate'
+      preLoaderRoute: typeof ApiAdminMutateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/logout': {
+      id: '/api/admin/logout'
+      path: '/api/admin/logout'
+      fullPath: '/api/admin/logout'
+      preLoaderRoute: typeof ApiAdminLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/login': {
+      id: '/api/admin/login'
+      path: '/api/admin/login'
+      fullPath: '/api/admin/login'
+      preLoaderRoute: typeof ApiAdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiContentRoute: ApiContentRoute,
+  ApiAdminLoginRoute: ApiAdminLoginRoute,
+  ApiAdminLogoutRoute: ApiAdminLogoutRoute,
+  ApiAdminMutateRoute: ApiAdminMutateRoute,
+  ApiAdminSessionRoute: ApiAdminSessionRoute,
+  ApiAdminUploadRoute: ApiAdminUploadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
